@@ -18,8 +18,9 @@ extends EditorPlugin
 
 ## 返回对EditorInterface的引用
 var face:EditorInterface
-## 返回EditorInterface.get_tree().root
-var face_root:Window
+
+var face_root:Viewport
+
 ## 返回EditorInterface.get_base_control()
 var base_control:Panel
 ## 返回对编辑器顶部栏的引用
@@ -66,7 +67,7 @@ var ScriptEditor_LB_Vbox:VBoxContainer # 脚本编辑器左上角VBox - 方法�
 func _init():
 	# 初始化部分界面元素引用
 	face = get_editor_interface()
-	face_root = face.get_tree().root
+	face_root = face.get_base_control().get_viewport()
 	base_control = face.get_base_control()
 	
 	var base_vbox:VBoxContainer = get_child_as_class(base_control,"VBoxContainer")

@@ -11,9 +11,10 @@ config_version=5
 [application]
 
 config/name="resManager"
+config/tags=PackedStringArray("插件")
 config/features=PackedStringArray("4.1", "Forward Plus")
 config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/resManager/plugin.cfg")
+enabled=PackedStringArray("res://addons/Script++/plugin.cfg", "res://addons/resManager/plugin.cfg")
