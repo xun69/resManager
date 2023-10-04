@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3 uid="uid://d52s53jsm416"]
+
+[sub_resource type="GDScript" id="GDScript_knt3r"]
+script/source = "@tool
+extends Window
+
+@onready var tree = %Tree
+@onready var tree2 = %Tree2
+@onready var class_name_lab = %classNameLab
+
+var GDEditor = preload(\"res://addons/Script++/class/sub_class/ScriptPlugin.gd\").new()
+
+
+func _ready():
+	# 加载内部类列表
+	var root:TreeItem = tree.create_item()
+	root.set_text(0,\"内部类\")
+	root.set_icon(0,GDEditor.get_icon(\"Resource\"))
+	var class_list1 = ClassManger.get_built_in_class_list()
+	for clas in class_list1:
+		var itm:TreeItem = tree.create_item()
+		itm.set_text(0,clas)
+		itm.set_icon(0,GDEditor.get_icon(clas))
+	pass
+
+
+
+func _on_close_requested():
+	queue_free()
+	pass
+
+
+func _on_tree_item_selected():
+	
+	tree2.clear()
+	var root:TreeItem = tree2.create_item()
+	root.set_text(0,\"root\")
+	var sel:TreeItem = tree.get_selected()
+	var className = sel.get_text(0)
+	
+	class_name_lab.text = \"%s的成员：\" % className
+	
+#	GDEditor.goto_help(sel.get_text(0))
+
+	var propertys = ClassInfo.get_property_lists(className)
+	for prop in propertys:
+		var itm:TreeItem = tree2.create_item()
+		itm.set_text(0,prop[\"name\"])
+		itm.set_icon(0,GDEditor.get_icon(\"Control\"))
+
+	var methods = ClassInfo.get_method_lists(className)
+	for mth in methods:
+		var itm:TreeItem = tree2.create_item()
+		itm.set_text(0,mth)
+		itm.set_icon(0,GDEditor.get_icon(\"Node3D\"))
+		
+	var signals = ClassInfo.get_signal_lists(className)
+	for sig in signals:
+		var itm:TreeItem = tree2.create_item()
+		itm.set_text(0,sig)
+		itm.set_icon(0,GDEditor.get_icon(\"Node2D\"))
+	pass
+
+
+func _on_tree_2_item_selected():
+	pass
+"
+
+[node name="object_browser" type="Window"]
+title = "对象浏览器"
+initial_position = 1
+size = Vector2i(1152, 648)
+always_on_top = true
+script = SubResource("GDScript_knt3r")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tree" type="Tree" parent="vbox/HSplitContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="vbox/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="classNameLab" type="Label" parent="vbox/HSplitContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Tree2" type="Tree" parent="vbox/HSplitContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+hide_folding = true
+hide_root = true
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="item_selected" from="vbox/HSplitContainer/Tree" to="." method="_on_tree_item_selected"]
+[connection signal="item_selected" from="vbox/HSplitContainer/VBox/Tree2" to="." method="_on_tree_2_item_selected"]

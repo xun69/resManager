@@ -1,0 +1,68 @@
+[gd_scene load_steps=5 format=3 uid="uid://ytoftldcda75"]
+
+[ext_resource type="Script" path="res://addons/resManager/parts/Group.gd" id="1_71s3l"]
+[ext_resource type="Script" path="res://addons/resManager/parts/ItemList.gd" id="2_61yw4"]
+[ext_resource type="Texture2D" uid="uid://us4vjdnjoyyk" path="res://addons/resManager/icons/down.png" id="2_ykrbe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ggbvf"]
+bg_color = Color(0.231373, 0.443137, 0.372549, 0)
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0.603922)
+
+[node name="Group" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_71s3l")
+
+[node name="titleBar" type="PanelContainer" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ggbvf")
+
+[node name="HBox" type="HBoxContainer" parent="titleBar"]
+layout_mode = 2
+
+[node name="toggleBtn" type="Button" parent="titleBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("2_ykrbe")
+flat = true
+
+[node name="titleLab" type="Label" parent="titleBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 0
+
+[node name="renameTxt" type="LineEdit" parent="titleBar/HBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ItemsList" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="ItemsList"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+theme_override_constants/icon_margin = 10
+theme_override_constants/line_separation = 20
+auto_height = true
+max_columns = 100
+same_column_width = true
+icon_mode = 0
+fixed_icon_size = Vector2i(100, 100)
+script = ExtResource("2_61yw4")
+
+[connection signal="pressed" from="titleBar/HBox/toggleBtn" to="." method="_on_toggle_btn_pressed"]
+[connection signal="gui_input" from="titleBar/HBox/titleLab" to="." method="_on_title_lab_gui_input"]
+[connection signal="text_submitted" from="titleBar/HBox/renameTxt" to="." method="_on_rename_txt_text_submitted"]
+[connection signal="drop_item_added" from="ItemsList/ItemList" to="." method="_on_item_list_drop_item_added"]
+[connection signal="item_activated" from="ItemsList/ItemList" to="ItemsList/ItemList" method="_on_item_activated"]
+[connection signal="item_clicked" from="ItemsList/ItemList" to="." method="_on_item_list_item_clicked"]
